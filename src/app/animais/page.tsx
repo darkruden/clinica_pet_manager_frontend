@@ -3,11 +3,7 @@ import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimalCard } from "@/components/domain/animais/animal-card";
 import { animalService } from "@/services/animal-service";
-import type { AnimalDTO } from "@/services/animal-service";
 
-interface AnimalCardProps {
-  animal: AnimalDTO;
-}
 export default function Page() {
   // 1. Buscamos as CLASSES do serviço
   const listaClasses = animalService.getAll();

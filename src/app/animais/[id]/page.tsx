@@ -1,50 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation"; // useParams para pegar o ID da URL
+// [Correção 1] Importamos o React padrão para usar os tipos (React.FormEvent)
+import React, { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 
 // Imports de UI e Lógica
 import { atualizarAnimalAction } from "@/app/animais/actions";
-import { animalService } from "@/services/animal-service";
+// [Correção 2] Removemos o import do animalService que não estava sendo usado
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// Nota: Em um app real com banco de dados, buscaríamos os dados via Server Component.
-// Como nosso service é estático em memória no servidor, vamos usar uma abordagem híbrida simplificada para o trabalho.
-
 export default function EditarAnimalPage() {
   const router = useRouter();
   const params = useParams();
-  const id = Number(params.id); // Pega o ID da URL (/animais/1 -> 1)
+  const id = Number(params.id);
 
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
   const [tipo, setTipo] = useState<"cachorro" | "gato">("cachorro");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
-  // Carregar os dados do animal ao abrir a página
   useEffect(() => {
-    // Precisamos chamar uma Server Action para buscar os dados, 
-    // mas para simplificar, vamos simular que já sabemos os dados ou 
-    // você pode implementar uma Server Action 'buscarPorId' se quiser ser estrito.
-    // 
-    // TRUQUE PARA O TRABALHO: Como o service roda no servidor e estamos no cliente,
-    // idealmente passariamos os dados iniciais via props do Server Component pai.
-    // Mas vamos fazer o formulário assumir que você está editando.
-    
-    // Para este exercício, vamos deixar os campos em branco ou
-    // implementar um pequeno fetch se você tiver API. 
-    // Se quiser ver os dados preenchidos, teríamos que transformar esta página em Server Component.
+    // Aqui futuramente você pode chamar uma Server Action para buscar os dados
     setLoading(false);
   }, []);
 
   const handleSalvar = async (e: React.FormEvent) => {
     e.preventDefault();
-    await atualizarAnimalAction(id, nome, parseInt(idade), tipo);
+    
+    // Validação simples para evitar NaN
+    const idadeInt = parseInt(idade);
+    if (isNaN(idadeInt)) {
+      alert("Por favor, insira uma idade válida.");
+      return;
+    }
+
+    await atualizarAnimalAction(id, nome, idadeInt, tipo);
     alert("Animal atualizado com sucesso!");
     router.push("/animais");
   };
@@ -69,9 +65,11 @@ export default function EditarAnimalPage() {
             <div className="space-y-2">
               <Label htmlFor="nome">Nome</Label>
               <Input 
+                id="nome"
                 value={nome} 
                 onChange={(e) => setNome(e.target.value)} 
                 placeholder="Novo nome..." 
+                required
               />
             </div>
 
@@ -79,17 +77,21 @@ export default function EditarAnimalPage() {
               <div className="space-y-2">
                 <Label htmlFor="idade">Idade</Label>
                 <Input 
+                  id="idade"
                   type="number" 
                   value={idade} 
                   onChange={(e) => setIdade(e.target.value)} 
+                  required
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tipo">Tipo</Label>
                 <select 
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
+                  id="tipo"
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   value={tipo}
-                  onChange={(e) => setTipo(e.target.value as any)}
+                  // Type casting seguro
+                  onChange={(e) => setTipo(e.target.value as "cachorro" | "gato")}
                 >
                   <option value="cachorro">Cachorro</option>
                   <option value="gato">Gato</option>
@@ -97,7 +99,7 @@ export default function EditarAnimalPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
               <Save className="mr-2 h-4 w-4" />
               Salvar Alterações
             </Button>
