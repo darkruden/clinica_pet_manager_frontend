@@ -26,9 +26,12 @@ export default function EditarAnimalPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Aqui futuramente você pode chamar uma Server Action para buscar os dados
+  async function fetchData() {
+    // await fetch dos dados
     setLoading(false);
-  }, []);
+  }
+  fetchData();
+}, []);
 
   const handleSalvar = async (e: React.FormEvent) => {
     e.preventDefault();
