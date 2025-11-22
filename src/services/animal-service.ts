@@ -24,6 +24,20 @@ class AnimalService {
     // Filtra a lista mantendo apenas os animais que NÃO têm o ID informado
     this.animais = this.animais.filter(animal => animal.id !== id);
   }
+
+
+  // [NOVO] Busca um único animal pelo ID
+  public getById(id: number): Animal | undefined {
+    return this.animais.find(animal => animal.id === id);
+  }
+
+  // [NOVO] Substitui o animal antigo pelo novo
+  public update(updatedAnimal: Animal): void {
+    const index = this.animais.findIndex(a => a.id === updatedAnimal.id);
+    if (index !== -1) {
+      this.animais[index] = updatedAnimal;
+    }
+  }
 }
 
 export const animalService = new AnimalService();

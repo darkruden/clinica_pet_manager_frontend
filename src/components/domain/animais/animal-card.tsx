@@ -4,13 +4,14 @@ import { AnimalDTO } from "@/domain/animal"; // Mudamos de Animal para AnimalDTO
 import { Button } from "@/components/ui/button";
 import { Trash2, PawPrint } from "lucide-react";
 import { excluirAnimalAction } from "@/app/animais/actions";
-
+import Link from "next/link"; // Adicione este import
+import { Edit } from "lucide-react"; // Adicione o ícone Edit
 interface AnimalCardProps {
   animal: AnimalDTO; // O componente agora aceita o objeto simples
 }
 
 export function AnimalCard({ animal }: AnimalCardProps) {
-  
+
   const handleDelete = async () => {
     const confirmou = window.confirm(`Tem certeza que deseja remover o ${animal.nome}?`);
     if (confirmou) {
@@ -36,14 +37,24 @@ export function AnimalCard({ animal }: AnimalCardProps) {
 
       <div className="mb-6">
         <p className="text-sm text-slate-500 leading-relaxed">
-          {animal.descricao} 
+          {animal.descricao}
         </p>
       </div>
 
       <div className="flex gap-2 mt-auto pt-4 border-t border-slate-100">
-        <Button 
-          variant="destructive" 
-          size="sm" 
+
+        {/* Botão de Editar (Link) */}
+        <Link href={`/animais/${animal.id}`} className="w-full">
+          <Button variant="outline" size="sm" className="w-full gap-2">
+            <Edit className="h-4 w-4" />
+            Editar
+          </Button>
+        </Link>
+
+        {/* Botão de Excluir (Existente) */}
+        <Button
+          variant="destructive"
+          size="sm"
           className="w-full gap-2 hover:bg-red-600 transition-colors"
           onClick={handleDelete}
         >
