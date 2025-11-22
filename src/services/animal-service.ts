@@ -18,6 +18,12 @@ class AnimalService {
   public create(animal: Animal): void {
     this.animais.push(animal);
   }
+
+  // [NOVO] Método de Exclusão
+  public delete(id: number): void {
+    // Filtra a lista mantendo apenas os animais que NÃO têm o ID informado
+    this.animais = this.animais.filter(animal => animal.id !== id);
+  }
 }
 
 export const animalService = new AnimalService();
