@@ -1,22 +1,18 @@
-"use client"; // Obrigatório para ter interatividade (onClick)
+"use client";
 
-import { Animal } from "@/domain/animal";
+import { AnimalDTO } from "@/domain/animal"; // Mudamos de Animal para AnimalDTO
 import { Button } from "@/components/ui/button";
 import { Trash2, PawPrint } from "lucide-react";
-import { excluirAnimalAction } from "@/app/animais/actions"; // Importamos a Server Action
-import { toast } from "sonner"; // Opcional: para feedback visual futuro
+import { excluirAnimalAction } from "@/app/animais/actions";
 
 interface AnimalCardProps {
-  animal: Animal;
+  animal: AnimalDTO; // O componente agora aceita o objeto simples
 }
 
 export function AnimalCard({ animal }: AnimalCardProps) {
   
-  // Função que dispara a ação de exclusão
   const handleDelete = async () => {
-    // Confirmação simples nativa do navegador
     const confirmou = window.confirm(`Tem certeza que deseja remover o ${animal.nome}?`);
-    
     if (confirmou) {
       await excluirAnimalAction(animal.id);
     }
@@ -24,8 +20,6 @@ export function AnimalCard({ animal }: AnimalCardProps) {
 
   return (
     <div className="group relative flex flex-col justify-between border border-slate-200 bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:border-blue-200">
-      
-      {/* Cabeçalho do Card */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="bg-blue-50 p-2 rounded-lg">
@@ -40,14 +34,12 @@ export function AnimalCard({ animal }: AnimalCardProps) {
         </div>
       </div>
 
-      {/* Corpo com a Descrição POO */}
       <div className="mb-6">
         <p className="text-sm text-slate-500 leading-relaxed">
-          {animal.descricao}
+          {animal.descricao} 
         </p>
       </div>
 
-      {/* Rodapé com Ações */}
       <div className="flex gap-2 mt-auto pt-4 border-t border-slate-100">
         <Button 
           variant="destructive" 

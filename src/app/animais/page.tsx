@@ -1,16 +1,23 @@
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AnimalCard } from "@/components/domain/animais/animal-card"; // Importando nosso componente visual
-import { animalService } from "@/services/animal-service"; // Importando nosso "banco de dados"
+import { AnimalCard } from "@/components/domain/animais/animal-card";
+import { animalService } from "@/services/animal-service";
+import type { AnimalDTO } from "@/services/animal-service";
 
+interface AnimalCardProps {
+  animal: AnimalDTO;
+}
 export default function Page() {
-  // 1. Buscamos os dados do serviço (Simulando um SELECT * FROM animais)
-  const listaAnimais = animalService.getAll();
+  // 1. Buscamos as CLASSES do serviço
+  const listaClasses = animalService.getAll();
+
+  // 2. Convertemos para DTOs (Objetos Simples) antes de renderizar
+  // Isso remove os métodos e deixa o Next.js feliz
+  const listaAnimais = listaClasses.map(animal => animal.toDTO());
 
   return (
     <div className="container mx-auto py-10 px-4">
-      {/* Cabeçalho da Página */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Gestão de Animais</h1>
@@ -27,11 +34,10 @@ export default function Page() {
         </Link>
       </div>
 
-      {/* Grid de Listagem (Aqui acontece a mágica) */}
       {listaAnimais.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {listaAnimais.map((animal) => (
-            // Passamos a instância da Classe Animal para o componente
+            // Agora passamos o DTO, que não quebra
             <AnimalCard key={animal.id} animal={animal} />
           ))}
         </div>
