@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { animalService } from "@/services/animal-service";
 
 export default function EditarAnimalPage() {
   const router = useRouter();
@@ -26,16 +27,16 @@ export default function EditarAnimalPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  async function fetchData() {
-    // await fetch dos dados
-    setLoading(false);
-  }
-  fetchData();
-}, []);
+    async function fetchData() {
+      // await fetch dos dados
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
 
   const handleSalvar = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validação simples para evitar NaN
     const idadeInt = parseInt(idade);
     if (isNaN(idadeInt)) {
@@ -67,11 +68,11 @@ export default function EditarAnimalPage() {
           <form onSubmit={handleSalvar} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="nome">Nome</Label>
-              <Input 
+              <Input
                 id="nome"
-                value={nome} 
-                onChange={(e) => setNome(e.target.value)} 
-                placeholder="Novo nome..." 
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                placeholder="Novo nome..."
                 required
               />
             </div>
@@ -79,17 +80,17 @@ export default function EditarAnimalPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="idade">Idade</Label>
-                <Input 
+                <Input
                   id="idade"
-                  type="number" 
-                  value={idade} 
-                  onChange={(e) => setIdade(e.target.value)} 
+                  type="number"
+                  value={idade}
+                  onChange={(e) => setIdade(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="tipo">Tipo</Label>
-                <select 
+                <select
                   id="tipo"
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   value={tipo}
@@ -111,4 +112,9 @@ export default function EditarAnimalPage() {
       </Card>
     </div>
   );
+}
+
+export async function buscarAnimalPorIdAction(id: number) {
+  const animal = animalService.getById(id);
+  return animal ? animal.toDTO() : null;
 }

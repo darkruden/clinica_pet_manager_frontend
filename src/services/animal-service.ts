@@ -1,14 +1,15 @@
 import { Animal, Cachorro, Gato } from "@/domain/animal";
 
-// Simulação de Banco de Dados Estático (Singleton Pattern)
 class AnimalService {
   private animais: Animal[] = [];
 
   constructor() {
-    // Seed inicial (Dados de teste)
-    this.animais.push(new Cachorro(1, "Rex", 5));
-    this.animais.push(new Gato(2, "Felix", 3));
-    this.animais.push(new Cachorro(3, "Thor", 2));
+    // Seed inicial (Dados de teste) se a lista estiver vazia
+    if (this.animais.length === 0) {
+      this.animais.push(new Cachorro(1, "Rex", 5));
+      this.animais.push(new Gato(2, "Mimi", 3));
+      this.animais.push(new Cachorro(3, "Thor", 2));
+    }
   }
 
   public getAll(): Animal[] {
@@ -19,19 +20,14 @@ class AnimalService {
     this.animais.push(animal);
   }
 
-  // [NOVO] Método de Exclusão
   public delete(id: number): void {
-    // Filtra a lista mantendo apenas os animais que NÃO têm o ID informado
-    this.animais = this.animais.filter(animal => animal.id !== id);
+    this.animais = this.animais.filter(a => a.id !== id);
   }
 
-
-  // [NOVO] Busca um único animal pelo ID
   public getById(id: number): Animal | undefined {
-    return this.animais.find(animal => animal.id === id);
+    return this.animais.find(a => a.id === id);
   }
 
-  // [NOVO] Substitui o animal antigo pelo novo
   public update(updatedAnimal: Animal): void {
     const index = this.animais.findIndex(a => a.id === updatedAnimal.id);
     if (index !== -1) {
@@ -40,4 +36,9 @@ class AnimalService {
   }
 }
 
-export const animalService = new AnimalService();
+// Padrão Singleton para persistência em memória no Next.js (Dev Mode)
+const globalForService = global as unknown as { animalService: AnimalService };
+
+export const animalService = globalForService.animalService || new AnimalService();
+
+if (process.env.NODE_ENV !== 'production') globalForService.animalService = animalService;
