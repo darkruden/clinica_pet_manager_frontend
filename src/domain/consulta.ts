@@ -3,10 +3,11 @@ import { Veterinario, VeterinarioDTO } from './veterinario';
 
 export interface ConsultaDTO {
   id: number;
-  data: string; // Formatada para "DD/MM/AAAA" ou ISO
+  data: string;
   animal: AnimalDTO;
   veterinario: VeterinarioDTO;
   observacoes: string;
+  concluida: boolean; // [NOVO] Campo de status
 }
 
 export class Consulta {
@@ -15,18 +16,18 @@ export class Consulta {
         public data: Date,
         public animal: Animal,
         public veterinario: Veterinario,
-        public observacoes: string
+        public observacoes: string,
+        public concluida: boolean = false // [NOVO] Padrão é false (pendente)
     ) {}
 
-    // Transforma a classe complexa em dados simples para o React
     public toDTO(): ConsultaDTO {
         return {
             id: this.id,
-            // Formata a data para o padrão brasileiro
             data: this.data.toLocaleDateString("pt-BR"), 
             animal: this.animal.toDTO(),
             veterinario: this.veterinario.toDTO(),
-            observacoes: this.observacoes
+            observacoes: this.observacoes,
+            concluida: this.concluida // [NOVO]
         };
     }
 }

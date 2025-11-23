@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { CalendarPlus, Trash2, Calendar } from "lucide-react";
+import { CalendarPlus, Trash2, Calendar, CheckCircle2 } from "lucide-react"; // [NOVO] Icone Check
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { consultaService } from "@/services/consulta-service";
-import { cancelarConsultaAction } from "./actions";
+import { cancelarConsultaAction, concluirConsultaAction } from "./actions"; // [NOVO] Import
 
 export default function ConsultasPage() {
   const consultas = consultaService.getAll().map(c => c.toDTO());
@@ -29,20 +29,40 @@ export default function ConsultasPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {consultas.length > 0 ? (
           consultas.map((consulta) => (
-            <Card key={consulta.id} className="border-l-4 border-l-purple-500 shadow-sm">
+            <Card
+              key={consulta.id}
+              // [VISUAL] Muda a cor da borda e opacidade se estiver concluída
+              className={`shadow-sm transition-all ${consulta.concluida
+                  ? "border-l-4 border-l-slate-400 bg-slate-50 opacity-80"
+                  : "border-l-4 border-l-purple-500 hover:shadow-md"
+                }`}
+            >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-purple-500" />
+                  <CardTitle className={`text-lg flex items-center gap-2 ${consulta.concluida ? "text-slate-500" : ""}`}>
+                    <Calendar className={`h-4 w-4 ${consulta.concluida ? "text-slate-400" : "text-purple-500"}`} />
                     {consulta.data}
+                    {consulta.concluida && <span className="text-xs bg-slate-200 px-2 py-1 rounded-full text-slate-600">Realizada</span>}
                   </CardTitle>
 
-                  {/* Botão Cancelar (Server Action Inline) */}
-                  <form action={cancelarConsultaAction.bind(null, consulta.id)}>
-                    <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-600 h-8 w-8">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </form>
+                  {/* Ações (Só aparecem se NÃO estiver concluída) */}
+                  {!consulta.concluida && (
+                    <div className="flex gap-1">
+                      {/* Botão Finalizar */}
+                      <form action={concluirConsultaAction.bind(null, consulta.id)}>
+                        <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700 hover:bg-green-50 h-8 w-8" title="Finalizar Atendimento">
+                          <CheckCircle2 className="h-5 w-5" />
+                        </Button>
+                      </form>
+
+                      {/* Botão Cancelar */}
+                      <form action={cancelarConsultaAction.bind(null, consulta.id)}>
+                        <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8" title="Cancelar Agendamento">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </form>
+                    </div>
+                  )}
                 </div>
               </CardHeader>
               <CardContent>
@@ -55,7 +75,7 @@ export default function ConsultasPage() {
                     <p className="text-xs font-medium text-muted-foreground uppercase">Veterinário</p>
                     <p className="text-sm">{consulta.veterinario.nome}</p>
                   </div>
-                  <div className="bg-slate-50 p-2 rounded text-xs text-slate-600 italic">
+                  <div className="bg-white p-2 rounded border text-xs text-slate-600 italic">
                     "{consulta.observacoes || "Sem observações."}"
                   </div>
                 </div>

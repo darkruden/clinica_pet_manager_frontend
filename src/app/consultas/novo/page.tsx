@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea"; // Se não tiver, use Input normal ou instale
 
 // Importamos os serviços para carregar as listas
 import { animalService } from "@/services/animal-service";

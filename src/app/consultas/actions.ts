@@ -43,3 +43,8 @@ export async function cancelarConsultaAction(id: number) {
   consultaService.delete(id);
   revalidatePath("/consultas");
 }
+
+export async function concluirConsultaAction(id: number) {
+  consultaService.concluir(id);
+  revalidatePath("/consultas");
+}
