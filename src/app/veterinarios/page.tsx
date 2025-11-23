@@ -6,7 +6,7 @@ import { excluirVeterinarioAction } from "./actions";
 
 // Componente Client-Side Pequeno para o Botão de Excluir
 // (Isolamos isso para poder usar "use client" apenas onde precisa de interatividade)
-import { DeleteVetButton } from "./delete-button";
+import { DeleteVetButton } from "@/app/veterinarios/delete-button";
 
 export default function VeterinariosPage() {
   const listaVets = veterinarioService.getAll().map(v => v.toDTO());

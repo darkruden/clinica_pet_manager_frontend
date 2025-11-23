@@ -13,7 +13,7 @@ export class Veterinario {
     public especialidade: string
   ) {}
 
-  // Padrão DTO para passar dados para o Frontend sem quebrar o Next.js
+  // O método mágico que evita erros no Next.js
   public toDTO(): VeterinarioDTO {
     return {
       id: this.id,
