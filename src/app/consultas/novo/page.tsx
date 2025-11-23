@@ -86,7 +86,10 @@ export default function NovaConsultaPage() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
+            <Button
+              type="submit"
+              className="w-full !bg-purple-600 !text-white hover:!bg-purple-700"
+            >
               <Save className="mr-2 h-4 w-4" />
               Confirmar Agendamento
             </Button>
