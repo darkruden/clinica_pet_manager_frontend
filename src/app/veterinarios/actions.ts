@@ -29,3 +29,25 @@ export async function cadastrarVeterinarioAction(formData: FormData) {
   revalidatePath("/veterinarios");
   redirect("/veterinarios");
 }
+
+export async function buscarVeterinarioPorIdAction(id: number) {
+  const vet = veterinarioService.getById(id);
+  // Retorna o DTO para não dar erro de "Classes not supported"
+  return vet ? vet.toDTO() : null;
+}
+
+// [NOVO] Processa a atualização vinda do formulário
+export async function atualizarVeterinarioAction(formData: FormData) {
+  const id = parseInt(formData.get("id") as string);
+  const nome = formData.get("nome") as string;
+  const crmv = formData.get("crmv") as string;
+  const especialidade = formData.get("especialidade") as string;
+
+  // Recria o objeto com a Classe de Domínio
+  const vetAtualizado = new Veterinario(id, nome, crmv, especialidade);
+  
+  veterinarioService.update(vetAtualizado);
+  
+  revalidatePath("/veterinarios");
+  redirect("/veterinarios");
+}

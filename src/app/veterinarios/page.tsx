@@ -51,10 +51,13 @@ export default function VeterinariosPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right flex justify-end gap-2">
-                    {/* Botão Editar (Placeholder por enquanto) */}
-                    <Button variant="ghost" size="icon" disabled>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+
+                    {/* Botão Editar ATIVADO */}
+                    <Link href={`/veterinarios/${vet.id}`}>
+                      <Button variant="ghost" size="icon" className="text-blue-600 hover:bg-blue-50">
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </Link>
 
                     {/* Botão Excluir */}
                     <DeleteVetButton id={vet.id} nome={vet.nome} />
